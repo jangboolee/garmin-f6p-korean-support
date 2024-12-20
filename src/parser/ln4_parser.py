@@ -1,4 +1,5 @@
 from pathlib import Path
+from csv import DictReader
 
 
 class Ln4Parser:
@@ -56,3 +57,35 @@ class Ln4Parser:
         """
 
         return self.parsed.get(key, None)
+
+    def export_file(self) -> bool:
+        """Method to export a LN4 file based on manual translations
+
+        Returns:
+            bool: True after completion
+        """
+
+        read_path = Path(".") / "files" / "kr_translated.csv"
+
+        # Read manual Korean translation results
+        f = open(read_path, encoding="utf-8-sig")
+        reader = DictReader(f)
+
+        base_path = Path(".") / "files" / "ln4" / "f6p" / "modified"
+        write_path = base_path / f"{self.language}.ln4"
+
+        with open(write_path, "w", encoding="utf-8") as f:
+            # Write header
+            f.write(self.header + "\n")
+            # Convert each key-value pair to a single string
+            lines = [f"{line['key']} {line['KR']}\n" for line in reader]
+            # Write all items
+            f.writelines(lines)
+
+        f.close()
+
+        return True
+
+
+parser = Ln4Parser("ukrainia")
+parser.export_file()
