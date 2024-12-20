@@ -3,13 +3,16 @@ from pathlib import Path
 
 class Ln4Parser:
 
-    def __init__(self, language: str) -> None:
+    def __init__(self, language: str, is_epix: bool = False) -> None:
 
         self.language = language
         # Use headers for ukrainia.ln4
         self.header = "006-D7752-35|v04.70"
         # Generate file path for the ln4 file to parse
-        base_path = Path(".") / "files" / "ln4" / "f6p" / "original"
+        if is_epix:
+            base_path = Path(".") / "files" / "ln4" / "epix"
+        else:
+            base_path = Path(".") / "files" / "ln4" / "f6p" / "original"
         self.file_path = base_path / f"{self.language}.ln4"
         self.parsed = {}
 
@@ -38,3 +41,15 @@ class Ln4Parser:
         print(f"Parsed {parsed_count} items")
 
         return parsed_count
+
+    def get_value(self, key: str) -> str:
+        """Getter method to get the value of a given key
+
+        Args:
+            key (str): Hexadecmial key to use for lookup
+
+        Returns:
+            str: The value of the key if found, None if not
+        """
+
+        return self.parsed.get(key, None)
