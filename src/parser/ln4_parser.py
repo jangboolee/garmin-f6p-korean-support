@@ -32,6 +32,9 @@ class Ln4Parser:
             # Separate key and value per line
             line_content = f_contents[i]
             key, value = line_content[:8], line_content[9:]
+            # Ignore seemingly incorrect item only found in Ukrainian file
+            if key == "ст-но %1":
+                continue
             # Add as key-value pairs to dictionary
             self.parsed[key] = value
 
